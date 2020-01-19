@@ -2,7 +2,7 @@ const express = require('express');
 
 const app = express();
 
-//Usa o Json para todos os metodos do express
+//Usa o Json para todos os metodos do express/
 app.use(express.json());
 
 //Metodos HTTP: GET, POST, PUT e DELETE
