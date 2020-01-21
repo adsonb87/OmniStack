@@ -1,32 +1,40 @@
 const { Router } = require('express');
+const axios = require('axios');
+const Dev = require('./models/Dev.js');
 
 const routes = Router();
 
-//Metodos HTTP: GET, POST, PUT e DELETE
+routes.post('/devs', async (req, res) => {
+    //Vai recuperar os dados do usuario do git hub
+    const { github_username, techs, latitude, longitude } = req.body;
 
-//Tipos de parâmetros:
-//Query Params: req.query (Filtros, Ordenação, Paginação...)
-//Route Params: req.params (Identificar um recurso na alteração ou remoção)
-//Body: req.body (Dados para criação ou alteração de um registro)
+    //Acessa a api do Github
+    const apiRes = await axios.get(`https://api.github.com/users/${github_username}`);
 
-//MongoDB (Não relacional)
+    //Recebe os dados da api, se oo nome for vazio ele pega o valor do login
+    const {name = login, avatar_url, bio} = apiRes.data;
 
-//Enviando dados pelo GET
-routes.get('/users', (request,response) =>{
-    console.log(request.query);
-    return response.json({message: 'Hello World'});
+    //Percorre o array de techs para retirar as virgulas e os espaços
+    const techsArray = techs.split(',').map(tech => tech.trim());
+    
+    const location = {
+        type: 'Point',
+        coordinates: [longitude, latitude],
+    };
+
+
+    //Cra o OBJ dev
+    const dev = await Dev.create({
+        github_username,
+        name,
+        avatar_url,
+        bio,
+        techs: techsArray,
+        location,
+    });
+
+    return res.json(dev);
 });
 
-//Enviando os parametros para exclusão e alteração.
-routes.delete('/users/delete/:id', (request,response) =>{
-    console.log(request.params)
-    return response.json({message: 'Hello World'});
-});
-
-//Enviando os parametros para criação ou alteração.
-routes.post('/users/cadastro', (request,response) =>{
-    console.log(request.body)
-    return response.json({message: 'Hello World'});
-});
 
 module.exports = routes;
