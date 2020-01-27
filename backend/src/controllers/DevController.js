@@ -1,10 +1,12 @@
 const axios = require('axios');
 const Dev = require('../models/Dev.js');
+const parseStringAsArray = require ('../utils/parseStringAsArray.js');
 
 //Index, Show, Store, Update, Destroy
 
 module.exports = {
     async index(req,res){
+        //Lista todos os DEVS
         const devs = await Dev.find();
 
         return res.json(devs);
@@ -24,7 +26,7 @@ module.exports = {
             const {name = login, avatar_url, bio} = apiRes.data;
         
             //Percorre o array de techs para retirar as virgulas e os espaços
-            const techsArray = techs.split(',').map(tech => tech.trim());
+            const techsArray = parseStringAsArray(techs);
             
             const location = {
                 type: 'Point',
