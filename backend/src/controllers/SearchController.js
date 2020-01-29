@@ -8,9 +8,22 @@ module.exports ={
 
         const techsArray = parseStringAsArray(techs);
 
-        console.log(techsArray);
+        const devs = await Dev.find({
+            techs:{
+                $in: techsArray, //vai verificar na coluna techs os campos que contém as techs passadas
+            },
+            location:{
+                $near:{ //Função do mongo que retorna a proximidade da localidade no próprio banco
+                    $geometry:{
+                        type: 'Point',
+                        coordinates:[longitude,latitude],
+                    },
+                    $maxDistance: 10000,
+                },
+            },
+        });
 
-        return res.json({ DEV: [] });
+        return res.json({ devs });
     }
 
 };
