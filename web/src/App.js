@@ -7,6 +7,8 @@ import './Sidebar.css';
 import './Main.css';
 
 function App() {
+  const [devs, setDevs] = useState([]);
+
   const [github_username, setGithubUsername] = useState('');
   const [techs, setTechs] = useState('');
   const [latitude, setLatitude] = useState('');
@@ -29,6 +31,16 @@ function App() {
     )
   }, []);
   
+  useEffect(() => {
+    async function loadDevs(){
+      const  response = await api.get('/devs');
+
+      setDevs(response.data);
+    }
+
+    loadDevs();
+  }, []);
+
   async function handleAddDev(e){
     e.preventDefault();
 
@@ -39,7 +51,10 @@ function App() {
       longitude,
     })
 
-    console.log(response.data);
+    setGithubUsername('');
+    setTechs('');
+
+    setDevs([...devs, response.data]);
   }
 
   return (
@@ -99,54 +114,19 @@ function App() {
 
       <main>
         <ul>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars2.githubusercontent.com/u/11176895?s=460&v=4" alt="adsonb87"/>
-              <div className="user-info">
-                <strong>Adson B de Souza</strong>
-                <span>ReactJS, React, Node.js</span>
-              </div>
-            </header>
-            <p>Analista de Sistemas, RM Totvs, Backoffice, Gestão de Compras, Estoque e Faturamento</p>
-            <a href="https://github.com/adsonb87">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars2.githubusercontent.com/u/11176895?s=460&v=4" alt="adsonb87"/>
-              <div className="user-info">
-                <strong>Adson B de Souza</strong>
-                <span>ReactJS, React, Node.js</span>
-              </div>
-            </header>
-            <p>Analista de Sistemas, RM Totvs, Backoffice, Gestão de Compras, Estoque e Faturamento</p>
-            <a href="https://github.com/adsonb87">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars2.githubusercontent.com/u/11176895?s=460&v=4" alt="adsonb87"/>
-              <div className="user-info">
-                <strong>Adson B de Souza</strong>
-                <span>ReactJS, React, Node.js</span>
-              </div>
-            </header>
-            <p>Analista de Sistemas, RM Totvs, Backoffice, Gestão de Compras, Estoque e Faturamento</p>
-            <a href="https://github.com/adsonb87">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars2.githubusercontent.com/u/11176895?s=460&v=4" alt="adsonb87"/>
-              <div className="user-info">
-                <strong>Adson B de Souza</strong>
-                <span>ReactJS, React, Node.js</span>
-              </div>
-            </header>
-            <p>Analista de Sistemas, RM Totvs, Backoffice, Gestão de Compras, Estoque e Faturamento</p>
-            <a href="https://github.com/adsonb87">Acessar perfil no Github</a>
-          </li>
-          
+          {devs.map(dev => (
+            <li key={dev._id} className="dev-item">
+              <header>
+                <img src={dev.avatar_url} alt={dev.name}/>
+                <div className="user-info">
+                  <strong>{dev.name}</strong>
+                  <span>{dev.techs.join(', ')}</span>
+                </div>
+              </header>
+              <p>{dev.bio}</p>
+              <a href={`https://github.com/${dev.github_username}`}>Acessar perfil no Github</a>
+            </li>  
+          ))}       
         </ul>
       </main>
     </div>
