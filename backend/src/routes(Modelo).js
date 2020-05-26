@@ -2,12 +2,16 @@ const { Router } = require('express');
 
 const routes = Router();
 
-//Metodos HTTP: GET, POST, PUT e DELETE
+//Metodos HTTP: 
+//- GET - Buscar informação
+//- POST - Criar informação
+//- PUT - Editar informação
+//- DELETE - Apagar informação
 
 //Tipos de parâmetros:
 //Query Params: req.query (Filtros, Ordenação, Paginação...)
-//Route Params: req.params (Identificar um recurso na alteração ou remoção)
-//Body: req.body (Dados para criação ou alteração de um registro)
+//Route Params: req.params (Identificar um recurso na alteração ou remoção) metodos PUT ou DELETE
+//Body: req.body (Dados para criação ou alteração de um registro) metodos POST ou PUT
 
 //MongoDB (Não relacional)
 
