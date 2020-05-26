@@ -1,8 +1,10 @@
-const axios = require('axios');
+const axios = require('axios');//Faz chamadas para outras api's
 const Dev = require('../models/Dev.js');
 const parseStringAsArray = require ('../utils/parseStringAsArray.js');
 
 //Index, Show, Store, Update, Destroy
+//Async - Significa que a função pode demorar a responder
+//Await - Aguarda a chamada da API responder para continuar
 
 module.exports = {
     async index(req,res){
@@ -22,7 +24,7 @@ module.exports = {
             //Acessa a api do Github
             const apiRes = await axios.get(`https://api.github.com/users/${github_username}`);
         
-            //Recebe os dados da api, se oo nome for vazio ele pega o valor do login
+            //Recebe os dados da api, se o nome for vazio ele pega o valor do login
             const {name = login, avatar_url, bio} = apiRes.data;
         
             //Percorre o array de techs para retirar as virgulas e os espaços

@@ -9,6 +9,7 @@ module.exports ={
         const techsArray = parseStringAsArray(techs);
 
         const devs = await Dev.find({
+            //Pesquisar por mongo operators
             techs:{
                 $in: techsArray, //vai verificar na coluna techs os campos que contém as techs passadas
             },
