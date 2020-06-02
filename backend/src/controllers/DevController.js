@@ -46,5 +46,42 @@ module.exports = {
         }      
     
         return res.json(dev); //aula 2
+    },
+
+    async show(req, res){
+        const { github_username } = req.query;
+
+        const dev = await Dev.find({ github_username });
+
+        return res.json(dev);
+    },
+
+    async update(req,res){
+        const { github_username, techs, latitude, longitude } = req.body;
+        const techsArray = parseStringAsArray(techs);
+        const location = {
+            type: 'Point',
+            coordinates: [longitude, latitude],
+        };
+        //const dev = await Dev.findOne({ github_username });
+
+        const dev = await Dev.update({
+            stock : {github_username},
+            $set : {techs: techsArray,
+                    location}
+        });
+
+        return res.json(dev);
+    },
+
+    async destroy(req,res){
+        const {github_username} = req.query;
+
+        const dev = await Dev.deleteOne({
+            github_username: github_username
+        });
+        
+        return res.json(dev);
     }
+
 };
